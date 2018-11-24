@@ -1,3 +1,4 @@
+import * as rp from "request"
 
 /**
  * Sequential counting sort
@@ -39,12 +40,26 @@ export function sort(array: number[], ascending = true): number[] {
  * @param start the beginning index where to start the counting
  * @param end the end index where to start the counting
  */
-async function count(array: number[], start: number, end: number): Promise<number[]> {
+export async function count(array: number[], start: number, end: number): Promise<number[]> {
     return new Promise<number[]>(resolve => {
         let counts: number[] = []
         for (let num = start; num < end; num++)
             counts[num] = counts[num] ? counts[num] + 1 : 1
         resolve(counts)
+    })
+}
+export async function countHttp(array: number[], start: number, end: number, url = "http://localhost:4000/") {
+    return new Promise<number[]>((resolve, reject) => {
+        let subarray = array.filter((v, i) => i >= start && i < end)
+        rp.post(url, {
+            body: JSON.stringify(subarray)
+        }, (err, res, body) => {
+            if (err) {
+                reject(err)
+            } else {
+                resolve(JSON.parse(res.body))
+            }
+        })
     })
 }
 
@@ -54,7 +69,7 @@ async function count(array: number[], start: number, end: number): Promise<numbe
  * @param threads number of threads running the sort
  * @param ascending if the result is ascending or not
  */
-export async function sortParallel(array: number[], threads = 4, ascending = true): Promise<number[]> {
+export async function sortParallel(array: number[], threads = 4, ascending = true, counter: (array: number[], start: number, end: number) => Promise<number[]> = count): Promise<number[]> {
     return new Promise<number[]>(resolve => {
         if (threads <= 1) {
             resolve(sort(array, ascending))
@@ -68,7 +83,7 @@ export async function sortParallel(array: number[], threads = 4, ascending = tru
             let start = i * size
             let end = start + size - 1
             if (end > array.length) end = array.length - 1
-            count(array, start, end).then(counts => {
+            counter(array, start, end).then(counts => {
                 allCounts.push(counts)
                 if (allCounts.length == threads) {
 
@@ -87,25 +102,37 @@ export async function sortParallel(array: number[], threads = 4, ascending = tru
 
                     // Building output
                     let output: number[] = []
-                    if (ascending) {
-                        let len = counts.length
-                        for (let num = 0; num < len; num++) {
-                            let count = counts[num]
-                            if (count) {
-                                for (let i = 0; i < count; i++)
-                                    output.push(num)
-                            }
-                        }
-                    } else {
-                        let len = counts.length
-                        for (let num = 0; num < len; num++) {
-                            let count = counts[num]
-                            if (count) {
-                                for (let i = 0; i < count; i++)
-                                    output.unshift(num)
-                            }
+                    let update = ascending ? num => output.push(num) : num => output.unshift(num);
+
+                    let len = counts.length
+                    for (let num = 0; num < len; num++) {
+                        let count = counts[num]
+                        if (count) {
+                            for (let i = 0; i < count; i++)
+                                update(num)
                         }
                     }
+
+                    // if (ascending) {
+                    //     let len = counts.length
+                    //     for (let num = 0; num < len; num++) {
+                    //         let count = counts[num]
+                    //         if (count) {
+                    //             for (let i = 0; i < count; i++)
+                    //                 output.push(num)
+                    //         }
+                    //     }
+                    // } else {
+                    //     let len = counts.length
+                    //     for (let num = 0; num < len; num++) {
+                    //         let count = counts[num]
+                    //         if (count) {
+                    //             for (let i = 0; i < count; i++)
+                    //                 output.unshift(num)
+                    //         }
+                    //     }
+                    // }
+
                     resolve(output)
                 }
             })
