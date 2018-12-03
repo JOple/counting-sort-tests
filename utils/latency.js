@@ -9,12 +9,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const http = require("http");
-const metrics_1 = require("./metrics");
+const perf_hooks_1 = require("perf_hooks");
 function latencyServer() {
     return http.createServer((req, res) => {
+        req.on('data', () => { });
         req.on('end', () => {
-            console.log("Request recieved");
             res.statusCode = 200;
+            res.write("");
             res.end();
         });
     });
@@ -22,12 +23,16 @@ function latencyServer() {
 exports.latencyServer = latencyServer;
 function latencyClient(opts) {
     return __awaiter(this, void 0, void 0, function* () {
-        return metrics_1.executionTime(() => new Promise(resolve => {
-            http.request(opts, res => {
-                console.log("Response received");
+        var startTime = perf_hooks_1.performance.now();
+        yield new Promise(resolve => {
+            var req = http.request(opts, res => {
+                res.on('data', () => { });
                 res.on('end', () => resolve());
-            }).end();
-        }));
+            });
+            req.write("");
+            req.end();
+        });
+        return perf_hooks_1.performance.now() - startTime;
     });
 }
 exports.latencyClient = latencyClient;
