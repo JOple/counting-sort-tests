@@ -4,9 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "tsc && node --max-old-space-size=2048 tests/basic.js",
     "start": "tsc && node index.js",
-    "server": "tsc && node --max-old-space-size=2048 tests/server.js"
+    "test": "tsc && node --max-old-space-size=2048 tests/basic.js",
+    "server": "tsc && node --max-old-space-size=2048 tests/server.js",
+    "l-client": "tsc && node tests/latency-client.js",
+    "l-server": "tsc && node tests/latency-server.js"
   },
   "keywords": [],
   "author": "",
