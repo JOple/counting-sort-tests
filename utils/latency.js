@@ -13,6 +13,7 @@ const metrics_1 = require("./metrics");
 function latencyServer() {
     return http.createServer((req, res) => {
         req.on('end', () => {
+            console.log("Request recieved");
             res.statusCode = 200;
             res.end();
         });
@@ -21,8 +22,11 @@ function latencyServer() {
 exports.latencyServer = latencyServer;
 function latencyClient(opts) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield metrics_1.executionTime(() => new Promise(resolve => {
-            http.request(opts, resolve);
+        return metrics_1.executionTime(() => new Promise(resolve => {
+            http.request(opts, res => {
+                console.log("Response received");
+                res.on('end', () => resolve());
+            }).end();
         }));
     });
 }
