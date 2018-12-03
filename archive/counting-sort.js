@@ -1,5 +1,4 @@
 // import * as rp from "request"
-
 // /**
 //  * Sequential counting sort
 //  * @param array input array
@@ -9,7 +8,6 @@
 //     let counts: number[] = []
 //     for (let num of array)
 //         counts[num] = counts[num] ? counts[num] + 1 : 1
-
 //     let output: number[] = []
 //     if (ascending) {
 //         let len = counts.length
@@ -30,10 +28,8 @@
 //             }
 //         }
 //     }
-
 //     return output
 // }
-
 // /**
 //  * Counts the numbers in a section of an array
 //  * @param array the input array
@@ -62,7 +58,6 @@
 //         })
 //     })
 // }
-
 // /**
 //  * Parallel counting sort
 //  * @param array input array
@@ -75,9 +70,7 @@
 //             resolve(sort(array, ascending))
 //             return
 //         }
-
 //         let size = Math.ceil(array.length / threads)
-
 //         let allCounts: number[][] = []
 //         for (let i = 0; i < threads; i++) {
 //             let start = i * size
@@ -86,7 +79,6 @@
 //             counter(array, start, end).then(counts => {
 //                 allCounts.push(counts)
 //                 if (allCounts.length == threads) {
-
 //                     // Combining counts
 //                     let clen = allCounts.length
 //                     let counts = allCounts[0]
@@ -99,11 +91,9 @@
 //                             counts[i] = a + b
 //                         }
 //                     }
-
 //                     // Building output
 //                     let output: number[] = []
 //                     let update = ascending ? num => output.push(num) : num => output.unshift(num);
-
 //                     let len = counts.length
 //                     for (let num = 0; num < len; num++) {
 //                         let count = counts[num]
@@ -112,7 +102,6 @@
 //                                 update(num)
 //                         }
 //                     }
-
 //                     // if (ascending) {
 //                     //     let len = counts.length
 //                     //     for (let num = 0; num < len; num++) {
@@ -132,19 +121,15 @@
 //                     //         }
 //                     //     }
 //                     // }
-
 //                     resolve(output)
 //                 }
 //             })
 //         }
 //     })
 // }
-
 // export async function sortParallel2(array: number[], ascending = true) {
 //     return new Promise<number[]>(resolve => {
-
 //         let size = Math.ceil(array.length / 2)
-
 //         let allCounts: number[][] = []
 //         for (let i = 0; i < 2; i++) {
 //             let start = i * size
@@ -153,7 +138,6 @@
 //             count(array, start, end).then(counts => {
 //                 allCounts.push(counts)
 //                 if (allCounts.length == 2) {
-
 //                     // Combining counts
 //                     let clen = allCounts.length
 //                     let counts = allCounts[0]
@@ -166,7 +150,6 @@
 //                             counts[i] = a + b
 //                         }
 //                     }
-
 //                     // Building output
 //                     let output: number[] = []
 //                     if (ascending) {

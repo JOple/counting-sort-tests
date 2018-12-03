@@ -1,6 +1,5 @@
 // import * as http from "http"
 // import * as zlib from "zlib"
-
 // function count(array: number[]) {
 //     let counts: number[] = []
 //     for (let num of array)
@@ -23,5 +22,3 @@
 //         })
 //     });
 // }).listen(4000)
-
-

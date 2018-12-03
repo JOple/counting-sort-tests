@@ -1,7 +1,6 @@
 import * as http from "http"
 import * as zlib from "zlib"
 import { NumberCounter } from "./model";
-import { countHttpZip } from "../archive";
 
 /* ********************************
  * NumberCounter
